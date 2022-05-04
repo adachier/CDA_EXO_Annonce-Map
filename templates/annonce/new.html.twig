@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Annonce{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-5">Créer une nouvelle Annonce</h1>
+
+    {{ include('annonce/_form.html.twig') }}
+
+    <div class="mt-4 d-flex justify-content-center">
+        <a class="btn btn-danger" href="{{ path('home') }}">Annuler</a>
+    </div>
+{% endblock %}

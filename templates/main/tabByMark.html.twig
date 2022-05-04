@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="title text-center mt-4">Annonces pour la marque : {{mark.name}}</h1>
+            <div class="container">
+                <ul class="list-group">
+                    {% for mark in marques %}
+                        <a href="{{path('tabFilter', {'id': mark.id})}}"><li class="list-group-item">{{mark.name}}</li></a>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="container d-flex justify-content-around mt-5 flex-wrap">
+            {% for annonce in mark.listCars %}
+                <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{annonce.title}}</h5>
+                        <p class="card-text">{{annonce.description|u.truncate(100, '...' )|raw}}</p>
+                        <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-success">Voir l'annonce</a>
+                    </div>
+                </div>
+            {% endfor %} 
+            </div>
+    </div>
+
+{% endblock %}

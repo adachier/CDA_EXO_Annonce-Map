@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="text-center mt-4">Trouvez la voiture de vos rêves</h1>
+    <div class="container">
+        <ul class="list-group">
+            {% for mark in marques %}
+                <a href="{{path('tabFilter', {'id': mark.id})}}"><li class="list-group-item">{{mark.name}}</li></a>
+            {% endfor %}
+        </ul>
+        {% if app.user %}
+            <div class="text-center mt-3">
+                <a class="btn btn-success" style="margin: 0 auto;" href="{{ path('app_annonce_new')}}">Ajouter une nouvelle annonce</a>
+            </div>
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="text-center mt-3">
+                <a class="btn btn-warning" style="margin: 0 auto;" href="{{ path('app_annonce_index')}}">Liste des annonces</a>
+                <a class="btn btn-warning" style="margin: 10px auto;" href="{{ path('app_marque_index')}}">Liste des marques</a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container d-flex justify-content-around mt-5 flex-wrap mb-5">
+        {% for annonce in annonces %}
+                <div class="card mb-4" style="width: 18rem;">
+                <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{annonce.title|u.truncate(20, '...' )}}</h5>
+                        <p class="card-text">{{annonce.description|u.truncate(100, '...' )|raw}}</p>
+                        <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-success">Voir l'annonce</a>
+                        {% if app.user %}
+                            {% if annonce.isUserFav(app.user) %}
+                                <a href="{{ path('app_annonce_fav', {'id': annonce.id}) }}" class="btn btn-warning"><i class="fa-solid fa-heart-circle-check"></i></a>
+                            {% else %}
+                                <a href="{{ path('app_annonce_fav', {'id': annonce.id}) }}" class="btn btn-success"><i class="fa-solid fa-heart-circle-plus"></i></a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

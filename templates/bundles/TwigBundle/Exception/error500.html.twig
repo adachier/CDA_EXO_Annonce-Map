@@ -1,0 +1,15 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Erreur 500</h1>
+
+        <p>
+           Celles-là, on ne les comprend jamais, ça doit être lié au serveur...
+        </p>
+
+        <a class="btn btn-primary" href="{{ path('home') }}">Retourner à la page d'accueil</a>.
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Annonce{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+    <h1 class="text-center">Editer {{annonce.title}}</h1>
+
+    <div class="text-center">
+        <a class="btn btn-warning" href="{{ path('app_annonce_index') }}">Retour à la liste</a>
+    </div>
+    {{ include('annonce/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+
+    <div class="d-flex mt-4 justify-content-center">
+        {{ include('annonce/_delete_form.html.twig') }}
+    </div>
+    </div>
+
+{% endblock %}

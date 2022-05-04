@@ -1,0 +1,16 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Erreur 404</h1>
+
+        <p>
+            La classique, l'indémodable... Votre page semble ne pas exister
+        </p>
+
+        <a class="btn btn-primary" href="{{ path('home') }}">Retourner à la page d'accueil</a>.
+
+    </div>
+{% endblock %}

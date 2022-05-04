@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonce{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-4">{{annonce.title}}</h1>
+
+    <div class="container w-75">
+        <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">
+    </div>
+
+    <div class="d-flex align-items-center flex-column mt-5">
+        <h5>Description :</h5>
+        <p>{{ annonce.description|raw }}</p>
+    </div>
+
+        <table class="table table-dark">
+        <thead>
+            <tr>
+            <th scope="col">Modèle</th>
+            <th scope="col">Prix</th>
+            <th scope="col">Année</th>
+            <th scope="col">Kilométrage</th>
+            <th scope="col">Carburant</th>
+            <th scope="col">Avec permis de conduire</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{annonce.model}}</td>
+            <td>{{annonce.prix}}€</td>
+            <td>{{annonce.year}}</td>
+            <td>{{annonce.km}}km</td>
+            <td>{{annonce.fuel}}</td>
+            <td class="text-center">{% if annonce.license == true %}<i class="fa-solid fa-id-card"></i>{% endif %}</td>
+            </tr>
+            <tr>
+        </tbody>
+        </table>
+
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-secondary" href="{{ path('home') }}">Revenir à l'accueil</a>
+    </div>
+{% endblock %}

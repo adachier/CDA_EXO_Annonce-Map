@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonce index{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1 class="text-center mt-4">Liste des annonces</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Model</th>
+                    <th>Prix</th>
+                    <th>Year</th>
+                    <th>Km</th>
+                    <th>Fuel</th>
+                    <th>License</th>
+                    <th>IsVisible</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for annonce in annonces %}
+                <tr>
+                    <td>{{ annonce.title }}</td>
+                    <td>{{ annonce.description|raw }}</td>
+                    <td>{{ annonce.model }}</td>
+                    <td>{{ annonce.prix }}</td>
+                    <td>{{ annonce.year }}</td>
+                    <td>{{ annonce.km }}</td>
+                    <td>{{ annonce.fuel }}</td>
+                    <td>{{ annonce.license ? 'Yes' : 'No' }}</td>
+                    <td>{{ annonce.isVisible ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <a class="btn btn-primary mb-2" href="{{ path('app_annonce_show', {'id': annonce.id}) }}">Voir</a>
+                        <a class="btn btn-warning" href="{{ path('app_annonce_edit', {'id': annonce.id}) }}">Éditer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="12">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a class="btn btn-success" href="{{ path('app_annonce_new') }}">Ajouter une anonce</a>
+    </div>
+{% endblock %}
