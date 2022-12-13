@@ -82,7 +82,7 @@ class AnnonceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_annonce_edit', methods: ['GET', 'POST'])]
-    public function edit($id, Request $request, Annonce $annonce, AnnonceRepository $annonceRepository): Response
+    public function edit($id, Request $request, Annonce $annonce, AnnonceRepository $annonceRepository, SluggerInterface $slugger): Response
     {
         $thisAnnonce = $annonceRepository->find($id);
 
@@ -94,12 +94,30 @@ class AnnonceController extends AbstractController
         $form->handleRequest($request);
         $author = $this->getUser();
         if($author == false){
-            $this->addFlash('Erreur', 'Vous devez avoir un compte pour ajouter une annonce');
+            $this->addFlash('Erreur', 'Vous devez avoir un compte pour ajouter/modifier une anonnce');
             return $this->redirectToRoute('home');
         }
 
-        if($author->getRoles() == 'ROLE_ADMIN' or $annonce->getAuthor()==$author) {
+        if($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') or $annonce->getAuthor()==$author) {
             if($form->isSubmitted() && $form->isValid()) {
+                $imageFile = $form->get('imgfile')->getData();
+
+                if($imageFile) {
+                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                    try {
+                        $imageFile->move(
+                            $this->getParameter('images_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+                    $annonce->setImgfile($newFilename);
+                }
+
                 $annonceRepository->add($annonce);
                 $this->addFlash('Succès', 'Votre annonce a bien été modifiée');
                 return $this->redirectToRoute('home',[], Response::HTTP_SEE_OTHER);
@@ -108,9 +126,10 @@ class AnnonceController extends AbstractController
                 'annonce' => $annonce,
                 'form' => $form,
             ]);
-        }
-        $this->addFlash('Erreur', 'Vous devez avoir un compte pour ajouter/éditer une annonce');
+        } else {
+        $this->addFlash('Erreur', 'Vous n\'êtes pas l\'auteur de cette anonnce');
         return $this->redirectToRoute('home');
+        }
     }
 
     #[Route('/{id}', name: 'app_annonce_delete', methods: ['POST'])]
@@ -121,11 +140,7 @@ class AnnonceController extends AbstractController
             $this->addFlash('Erreur', 'Votre devez avoir un compte pour ajouter une annonce');
             return $this->redirectToRoute('home');
         }
-        if ($author !== $annonce->getAuthor()) {
-            $this->addFlash('Erreur', 'Vous n\'êtes pas l\'auteur de cette annonce');
-            return $this->redirectToRoute('home');
-        }
-        if ($author == $annonce->getAuthor()) {
+        if($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') or $annonce->getAuthor() == $author) {
             $annonce->setisVisible(false);
             $annonceRepository->add($annonce);
         }else {
@@ -141,7 +156,6 @@ class AnnonceController extends AbstractController
     public function favUserAnnonce(Annonce $annonce, AnnonceListByUserRepository $annonceByUserRepo): Response
     {
         $user = $this->getUser();
-
         if(!$user) return $this->redirectToRoute('app_login');
 
         if($annonce->isUserfav($user)){
@@ -149,7 +163,6 @@ class AnnonceController extends AbstractController
                 'annonces' => $annonce,
                 'users' => $user
             ]);
-
             $annonceByUserRepo ->remove($signedUp);
             $this->addFlash('Erreur', "Cette annonce n'est plus dans vos favoris" );
 
@@ -163,7 +176,6 @@ class AnnonceController extends AbstractController
         $annonceByUserRepo->add($newFav);
         $this->addFlash('Succès', "Cette annonce est désormais dans vos favoris" );
 
-        // return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         return $this->redirectToRoute('home');
     }
 }

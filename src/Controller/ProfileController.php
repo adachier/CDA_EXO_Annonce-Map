@@ -12,13 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
 {
-    #[Route('/profile/{id}', name: 'app_profile')]
-    public function index(UserRepository $userRepo, AnnonceListByUserRepository $annonceListByUserRepo, AnnonceRepository $annonceRepo): Response
+    #[Route('/profile', name: 'app_profile')]
+    public function index(AnnonceListByUserRepository $annonceListByUserRepo, AnnonceRepository $annonceRepo): Response
     {
         $user = $this->getUser();
         return $this->render('profile/index.html.twig', [
             'annoncesFiltered' => $annonceListByUserRepo->findBy([
-                'users' => $user]),
+                'users' => $user,
+            ]),
             'annonces' => $annonceRepo->findBy([
                 'author' => $user,
             ]),

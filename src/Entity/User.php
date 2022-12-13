@@ -86,6 +86,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function hasNotRoleAdmin(): bool
+    {
+        $this->roles = 'ROLE_ADMIN';
+        return false;
+    }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */

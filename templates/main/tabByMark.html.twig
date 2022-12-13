@@ -13,10 +13,12 @@
             <div class="container d-flex justify-content-around mt-5 flex-wrap">
             {% for annonce in mark.listCars %}
                 <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">
+{#                <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">#}
+                    <img class="card-img-top" src="{{asset(annonce.imgfile )}}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{annonce.title}}</h5>
                         <p class="card-text">{{annonce.description|u.truncate(100, '...' )|raw}}</p>
+                        <p class="card-text">{{annonce.marque.name}}</p>
                         <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-success">Voir l'annonce</a>
                     </div>
                 </div>

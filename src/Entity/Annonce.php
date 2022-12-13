@@ -55,6 +55,9 @@ class Annonce
     #[ORM\Column(type: 'boolean')]
     private $isVisible;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $ref;
+
     public function __construct()
     {
         $this->usersFav = new ArrayCollection();
@@ -249,5 +252,17 @@ class Annonce
             if($usersFav ->getUsers() === $user) return true;
         }
         return false;
+    }
+
+    public function getRef(): ?string
+    {
+        return $this->ref;
+    }
+
+    public function setRef(string $ref): self
+    {
+        $this->ref = $ref;
+
+        return $this;
     }
 }

@@ -1,3 +1,28 @@
 body {
     background-color: lightgray;
 }
+
+/* MAP */
+.map {
+    width: 38.5%;
+}
+.map > svg{
+    width: 612.3844px;
+    height: 584.36005px;
+    margin: 80px 10px;
+}
+.container-map-card-home {
+    display: flex;
+}
+/* Map Interactive */
+.map__image path{
+    fill: white;
+    stroke: black;
+    stroke-width: 1px;
+}
+.map__image path:hover{
+    fill: #FDA085;
+    transition: fill .2s;
+    stroke: rgb(29, 29, 29);
+    stroke-width: 1px;
+}

@@ -6,6 +6,19 @@
 <div class="container">
     <h1 class="text-center mt-4">Trouvez la voiture de vos rêves</h1>
     <div class="container">
+
+        <div class="container-map-card-home">
+            <div class="map map__image">
+                <svg>
+                    {% for d in departements %}
+                        <a xlink:href="{{ path('event_departement', {'id': d.id})}}">
+                            <path d="{{ d.border }}" title="{{ d.name }}" id="FR-{{ d.id }}"/>
+                        </a>
+                    {% endfor %}
+                </svg>
+            </div>
+        </div>
+
         <ul class="list-group">
             {% for mark in marques %}
                 <a href="{{path('tabFilter', {'id': mark.id})}}"><li class="list-group-item">{{mark.name}}</li></a>
@@ -26,10 +39,12 @@
     <div class="container d-flex justify-content-around mt-5 flex-wrap mb-5">
         {% for annonce in annonces %}
                 <div class="card mb-4" style="width: 18rem;">
-                <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">
+{#                <img class="card-img-top" src="{{asset('images_directory/' ~ annonce.imgfile )}}" alt="Card image cap">#}
+                    <img class="card-img-top" src="{{asset(annonce.imgfile )}}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{annonce.title|u.truncate(20, '...' )}}</h5>
                         <p class="card-text">{{annonce.description|u.truncate(100, '...' )|raw}}</p>
+                        <p class="card-text">{{annonce.marque.name}}</p>
                         <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-success">Voir l'annonce</a>
                         {% if app.user %}
                             {% if annonce.isUserFav(app.user) %}
